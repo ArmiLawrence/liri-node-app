@@ -12,14 +12,21 @@ var spotify = new Spotify (keys.spotify);
 var action = process.argv[2];
 var nodeArgs = process.argv;
 
+//variables for the functions, putting them as global variables
+// Create an empty variable for holding the band name
+var artist = "";
+// empty variable to hold the song;
+var song = "";
+// Create an empty variable for holding the movie name
+var movieName = "";
+
+
 // Functions
 
     // bands in town/ concerts-this
 
-    function bandsInTown(){
-
-        var artist = "";
-
+    function bandsInTown(artist){
+      
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
         for (var i = 3; i < nodeArgs.length; i++) {
@@ -61,9 +68,7 @@ var nodeArgs = process.argv;
 
     // spotify - songs - spotify-this-song
 
-    function spotifySong() {
-        // empty variable to hold the song;
-        var song = "";
+    function spotifySong(song) {
 
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
@@ -110,11 +115,8 @@ var nodeArgs = process.argv;
 
     // movies - OMDB -movie-this
 
-    function movie(){
-            
-        // Create an empty variable for holding the movie name
-        var movieName = "";
-           
+    function movieThis(movieName){
+                                
         // Loop through all the words in the node argument
         // And do a little for-loop magic to handle the inclusion of "+"s
         for (var i = 3; i < nodeArgs.length; i++) {
@@ -154,7 +156,7 @@ var nodeArgs = process.argv;
 
     //reading from the random.txt - do what it says
 
-    function doIt() {
+    function doWhatItSays() {
 
         fs.readFile("random.txt", "utf8", function(error, data) {
 
@@ -165,52 +167,55 @@ var nodeArgs = process.argv;
                
         // Then split it by commas (to make it more readable)
         var dataArr = data.split(",");
+
         console.log(dataArr); //looking at the array
         console.log(dataArr[0]); //first thing in the array -- the command of what we're doing
         console.log(dataArr[1].slice(1, -1)); //the second thing in the array/removing the "" so text can be read.
-        
-        //These do not work, the functions cannot read the words passed through the data array
-        
-            if (dataArr[0] === "spotify-this-song") {
-                console.log("spotify!")
-                var song = dataArr[1].slice(1, -1);
-                spotifySong(song); //function cannot read the song variable and is sending an error             
-            } else if (dataArr[0] === "concert-this") {
-                console.log("bands in town!")
-                //var artist = dataArr[1].slice(1, -1);
-                //bandsInTown(artist);                
-            } else if(dataArr[0] === "movie-this") {
-                console.log("movie this!")
-                var movieName = dataArr[1].slice(1, -1);                                             
-                console.log(movieName); //console can read the movie name
-                movie(movieName); //spits out Mr. Nobody
-            }
-        });
-    }
 
-//lets do stuff
+        //If else to run stuff --
+
+        if (dataArr[0] === "spotify-this-song") {
+            console.log("spotify!");
+            var doItSong = dataArr[1].slice(1, -1);
+            spotifySong(doItSong);      
+        } else if (dataArr[0] === "concert-this") {
+            console.log("bands in town!");
+            var doItArtist = dataArr[1].slice(1, -1);
+            bandsInTown(doItArtist);                
+        } else if(dataArr[0] === "movie-this") {
+            console.log("movie this!");
+            var doItMovieName = dataArr[1].slice(1, -1);                                             
+            movieThis(doItMovieName); 
+        };
+        
+        });
+
+
+    };
+
+//lets do stuff; show stuff in the terminal.
 
 if (action === "concert-this") {
 
-    bandsInTown();
+    bandsInTown(artist);
 
     } 
 
     else if (action === "spotify-this-song")  {
 
-    spotifySong();  
+    spotifySong(song);  
 
     }
     
     else if (action === "movie-this"){
 
-    movie();   
+    movieThis(movieName);   
     
     }
         
     else if (action === "do-what-it-says") {
 
-    doIt();
+    doWhatItSays();
     
     };
 
